@@ -11,5 +11,6 @@ resource "aws_s3_bucket" "terraform-test-bucket" {
     Name        = "My bucket Terraform"
     Environment = "Dev"
     ManagedBy   = "Terraform"
+    Time       = "2021-07-07"
   }
 }
