@@ -1,23 +1,34 @@
+# main.tf
+
 provider "aws" {
-  region  = var.aws_region
+  region = "us-east-1"  # Substitua pela região desejada
 }
 
-resource "aws_dms_replication_subnet_group" "example" {
-  replication_subnet_group_description = "Example replication subnet group"
-  replication_subnet_group_id          = "example-dms-replication-subnet-group-tf"
-
-  subnet_ids = [
-    "subnet-12345678",
-    "subnet-12345679",
-  ]
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/16"  # Substitua pelo bloco CIDR desejado
 
   tags = {
-    Name = "example"
+    Name = "my-vpc"
   }
 }
 
-resource "aws_cloud9_environment_ec2" "example" {
+resource "aws_subnet" "my_subnet" {
+  vpc_id     = aws_vpc.my_vpc.id
+  cidr_block = "10.0.0.0/24"  # Substitua pelo bloco CIDR desejado
+
+  tags = {
+    Name = "my-subnet"
+  }
+}
+
+resource "aws_instance" "my_instance" {
+  ami           = "ami-003d3d03cfe1b0468"  # AMI do Ubuntu 22.04
   instance_type = "t2.micro"
-  name          = "example-env"
-  subnet_id     = "subnet-12345678"
+  subnet_id     = aws_subnet.my_subnet.id
+
+  tags = {
+    Name = "my-instance"
+  }
+
+  associate_public_ip_address = true
 }
